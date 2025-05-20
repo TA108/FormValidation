@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Validation</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 130%;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f2f2f2;
+        }
+
+        .eWrapper {
+            width: 550px;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        }
+
+        label {
+            width: 200px;
+            float: left;
+            position: relative;
+            top: 12px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            width: 320px;
+            font-size: 20px;
+            border: 1px solid black;
+            border-radius: 5px;
+            padding: 8px;
+            margin-bottom: 10px;
+        }
+
+        #submit {
+            width: 150px;
+            margin-left: 200px;
+            padding: 10px;
+            font-size: 18px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #submit:hover {
+            background-color: #0056b3;
+        }
+
+        #error, #success {
+            display: none;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        #error {
+            color: #721c24;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+        }
+
+        #success {
+            color: #155724;
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+        }
+
+        .show-password {
+            margin-left: 200px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 90%;
+        }
+    </style>
+</head>
+<body>
+
+<div class="eWrapper">
+    <div id="error"></div>
+    <div id="success"></div>
+
+    <label for="Email">Email:</label>
+    <input type="email" id="Email" name="Email">
+
+    <label for="PhoneNo">Phone No:</label>
+    <input type="text" id="PhoneNo" name="PhoneNo" maxlength="10">
+
+    <label for="Password">Password:</label>
+    <input type="password" id="Password" name="Password">
+
+    <label for="ConfirmPassword">Confirm Password:</label>
+    <input type="password" id="ConfirmPassword" name="ConfirmPassword">
+
+    <div class="show-password">
+        <input type="checkbox" id="togglePassword"> Show Password
+    </div>
+
+    <input type="submit" id="submit" value="Register">
+</div>
+
+<script>
+    $("#togglePassword").on("change", function () {
+        let type = this.checked ? "text" : "password";
+        $("#Password, #ConfirmPassword").attr("type", type);
+    });
+
+    // Restrict PhoneNo input to digits only
+    $("#PhoneNo").on("input", function () {
+        this.value = this.value.replace(/\D/g, '');
+    });
+
+    function isValidEmail(email) {
+        let pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return pattern.test(email);
+    }
+
+    function isValidPhone(phone) {
+        return /^\d{10}$/.test(phone);
+    }
+
+    function isStrongPassword(password) {
+        // Min 8 chars, 1 uppercase, 1 lowercase, 1 number
+        let pattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+        return pattern.test(password);
+    }
+
+    $("#submit").click(function (e) {
+        e.preventDefault();
+        let errors = [];
+
+        let email = $("#Email").val().trim();
+        let phone = $("#PhoneNo").val().trim();
+        let password = $("#Password").val();
+        let confirmPassword = $("#ConfirmPassword").val();
+
+        if (!email) {
+            errors.push("Email is required.");
+        } else if (!isValidEmail(email)) {
+            errors.push("Invalid email format.");
+        }
+
+        if (!phone) {
+            errors.push("Phone number is required.");
+        } else if (!isValidPhone(phone)) {
+            errors.push("Phone number must be exactly 10 digits.");
+        }
+
+        if (!password || !confirmPassword) {
+            errors.push("Both password fields are required.");
+        } else if (password !== confirmPassword) {
+            errors.push("Passwords do not match.");
+        } else if (!isStrongPassword(password)) {
+            errors.push("Password must be at least 8 characters long, include uppercase, lowercase, and a number.");
+        }
+
+        if (errors.length > 0) {
+            $("#success").hide();
+            $("#error").html(errors.map(e => `<p>${e}</p>`)).fadeIn();
+        } else {
+            $("#error").hide();
+            $("#success").html("<p>You are registered successfully!</p>").fadeIn();
+        }
+    });
+</script>
+
+
+</body>
+</html>
