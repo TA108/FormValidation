@@ -1,50 +1,47 @@
-# Simple Form Validation with jQuery
+# Form Validation
 
-This is a basic HTML form that performs client-side validation using jQuery.  
-It validates user inputs for Email, Phone Number, Password, and Confirm Password fields.
+A simple form validation project using HTML, CSS, and jQuery.
 
----
+## Description
+
+This project demonstrates client-side form validation for a registration form. It includes validation for email, phone number, password, and password confirmation fields. The form ensures that the email is in a valid format, the phone number is exactly 10 digits, and the password meets certain strength criteria.
 
 ## Features
 
-- Checks if the Email field is filled and matches a valid email pattern.
-- Checks if the Phone Number field is filled and contains only numbers.
-- Checks if the Password and Confirm Password fields are filled and match.
-- Displays validation errors dynamically below the form.
-- Shows a success message when all inputs are valid.
+- Email validation
+- Phone number validation (exactly 10 digits)
+- Password strength validation (minimum 8 characters, at least one uppercase letter, one lowercase letter, and one number)
+- Password confirmation matching
+- Show/hide password toggle
+- Error and success messages
 
----
+## Technologies Used
 
-## Files
-
-- `index.html` — The single HTML file containing the form, embedded CSS styling, and jQuery validation script.
-
----
+- HTML
+- CSS
+- JavaScript
+- jQuery
 
 ## How to Use
 
-1. Open `index.html` in any modern web browser.
-2. Fill in the form fields and click the submit button.
-3. Validation messages will appear if there are errors.
-4. A success message will display if all inputs pass validation.
+1. Clone the repository or download the files.
+2. Open the `index.html` file in your web browser.
+3. Fill out the form with your details.
+4. Submit the form to see the validation in action.
 
----
+## Validation Rules
 
-## Notes
+| Field | Validation Rules |
+| --- | --- |
+| Email | Required, must be a valid email format |
+| Phone No | Required, must be exactly 10 digits |
+| Password | Required, must be at least 8 characters long, include uppercase, lowercase, and a number |
+| Confirm Password | Required, must match the password field |
 
-- The validation runs purely on the client side.
-- The submit button uses a jQuery click handler with `e.preventDefault()` to stop actual form submission.
-- jQuery is referenced locally in the project as `jquery.js`. Make sure the file exists or update the path accordingly.
-- For production use, always implement server-side validation as well.
+## Screenshot
 
----
-
-## Dependencies
-
-- [jQuery](https://jquery.com/) (Make sure to have `jquery.js` in the project or update the script source to use CDN.)
-
----
+![Form Validation Screenshot](screenshot.png)
 
 ## License
 
-This project is open-source and free to use.
+This project is licensed under the MIT License.
