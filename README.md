@@ -37,11 +37,3 @@ This project demonstrates client-side form validation for a registration form. I
 | Phone No | Required, must be exactly 10 digits |
 | Password | Required, must be at least 8 characters long, include uppercase, lowercase, and a number |
 | Confirm Password | Required, must match the password field |
-
-## Screenshot
-
-![Form Validation Screenshot](screenshot.png)
-
-## License
-
-This project is licensed under the MIT License.
