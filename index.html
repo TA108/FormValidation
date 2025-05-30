@@ -5,104 +5,171 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Form Validation</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <!-- <script src=".\jquery.js"></script> -->
     <style>
-        body{
+        body {
             font-family: Arial, Helvetica, sans-serif;
             font-size: 130%;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f2f2f2;
         }
-        .eWrapper{
+
+        .eWrapper {
             width: 550px;
-            margin: 0 auto;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
         }
-        label{
+
+        label {
             width: 200px;
             float: left;
             position: relative;
-            top:12px;
+            top: 12px;
         }
-        input{
-            width: 320px;
-            font-size:25px;
-            border:1px solid black;
-            border-radius: 5px;
-            padding: 5px;
-            padding-bottom:12px;
-            margin-bottom: 10px;
-            
-        }
-        #submit{
-            width: 130px;
-            margin-left: 200px;
-        }
-        #error{
-            color: red;
-            font-size: 90%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;     
-            align-items: center;  
 
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            width: 320px;
+            font-size: 20px;
+            border: 1px solid black;
+            border-radius: 5px;
+            padding: 8px;
+            margin-bottom: 10px;
+        }
+
+        #submit {
+            width: 150px;
+            margin-left: 200px;
+            padding: 10px;
+            font-size: 18px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #submit:hover {
+            background-color: #0056b3;
+        }
+
+        #error, #success {
+            display: none;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        #error {
+            color: #721c24;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+        }
+
+        #success {
+            color: #155724;
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+        }
+
+        .show-password {
+            margin-left: 200px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 90%;
         }
     </style>
 </head>
 <body>
-    <div id="error">
-        <div class="eWrapper">
-        <label for="Email">Email:</label>
-        <input type="Email" id="Email" name="Email">
-        <label for="PhoneNo">Phone No:</label>
-        <input type="text" id="PhoneNo" name="PhoneNo">
-        <label for="Password">Password:</label>
-        <input type="password" id="Password" name="Password">
-        <label for="ConfirmPassword">Confirm Password:</label>
-        <input type="password" id="ConfirmPassword" name="ConfirmPassword">
-        <input type="submit" id="submit">
+
+<div class="eWrapper">
+    <div id="error"></div>
+    <div id="success"></div>
+
+    <label for="Email">Email:</label>
+    <input type="email" id="Email" name="Email">
+
+    <label for="PhoneNo">Phone No:</label>
+    <input type="text" id="PhoneNo" name="PhoneNo" maxlength="10">
+
+    <label for="Password">Password:</label>
+    <input type="password" id="Password" name="Password">
+
+    <label for="ConfirmPassword">Confirm Password:</label>
+    <input type="password" id="ConfirmPassword" name="ConfirmPassword">
+
+    <div class="show-password">
+        <input type="checkbox" id="togglePassword"> Show Password
     </div>
-    </div>
+
+    <input type="submit" id="submit" value="Register">
+</div>
+
 <script>
-    $("#submit").click(function(e){
+    $("#togglePassword").on("change", function () {
+        let type = this.checked ? "text" : "password";
+        $("#Password, #ConfirmPassword").attr("type", type);
+    });
+
+    function isValidEmail(email) {
+        let pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return pattern.test(email);
+    }
+
+    function isValidPhone(phone) {
+        return /^\d{10}$/.test(phone);
+    }
+
+    function isStrongPassword(password) {
+        // Min 8 chars, 1 uppercase, 1 lowercase, 1 number
+        let pattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+        return pattern.test(password);
+    }
+
+    $("#submit").click(function (e) {
         e.preventDefault();
-        var errormessage = "";
-        var email = $("#Email").val().trim();
-        var phone = $("#PhoneNo").val().trim();
-        var password = $("#Password").val();
-        var confirmPassword = $("#ConfirmPassword").val();
+        let errors = [];
 
-        function validEmail(e) {
-            var filter = /^\s*[\w\-\+_]+(\.[\w\-\+_]+)*\@[\w\-\+_]+\.[\w\-\+_]+(\.[\w\-\+_]+)*\s*$/;
-            return filter.test(e);
+        let email = $("#Email").val().trim();
+        let phone = $("#PhoneNo").val().trim();
+        let password = $("#Password").val();
+        let confirmPassword = $("#ConfirmPassword").val();
+
+        if (!email) {
+            errors.push("Email is required.");
+        } else if (!isValidEmail(email)) {
+            errors.push("Invalid email format.");
         }
 
-        // Email empty check
-        if(email === ""){
-            errormessage += "<p>Email ID is not filled</p>";
-        } 
-        else if(!validEmail(email)){
-            errormessage += "<p>Email ID is not valid</p>";
+        if (!phone) {
+            errors.push("Phone number is required.");
+        } else if (!isValidPhone(phone)) {
+            errors.push("Phone number must be exactly 10 digits.");
         }
 
-        // Phone number empty and numeric check
-        if(phone === ""){
-            errormessage += "<p>Phone Number is not filled</p>";
-        } 
-        else if(!$.isNumeric(phone)){
-            errormessage += "<p>Phone Number is not valid</p>";
+        if (!password || !confirmPassword) {
+            errors.push("Both password fields are required.");
+        } else if (password !== confirmPassword) {
+            errors.push("Passwords do not match.");
+        } else if (!isStrongPassword(password)) {
+            errors.push("Password must be at least 8 characters long, include uppercase, lowercase, and a number.");
         }
 
-        // Password empty check
-        if(password === "" || confirmPassword === ""){
-            errormessage += "<p>Password is not filled</p>";
-        } 
-        else if(password !== confirmPassword){
-            errormessage += "<p>Passwords do not match</p>";
-        }
-
-        if(errormessage === ""){
-            $("#error").html("<p style='color:green'>You are registered</p>");
-        } 
-        else {
-            $("#error").html(errormessage);
+        if (errors.length > 0) {
+            $("#success").hide();
+            $("#error").html(errors.map(e => `<p>${e}</p>`)).fadeIn();
+        } else {
+            $("#error").hide();
+            $("#success").html("<p>You are registered successfully!</p>").fadeIn();
         }
     });
 </script>
