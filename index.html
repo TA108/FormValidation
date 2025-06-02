@@ -120,6 +120,11 @@
         $("#Password, #ConfirmPassword").attr("type", type);
     });
 
+    // Restrict PhoneNo input to digits only
+    $("#PhoneNo").on("input", function () {
+        this.value = this.value.replace(/\D/g, '');
+    });
+
     function isValidEmail(email) {
         let pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return pattern.test(email);
@@ -173,6 +178,7 @@
         }
     });
 </script>
+
 
 </body>
 </html>
